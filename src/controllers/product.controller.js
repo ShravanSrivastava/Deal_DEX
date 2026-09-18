@@ -16,6 +16,8 @@ const {
   getBestPrice,
 } = require("../services/price.service");
 
+const { analyzeSentimentBatch } = require("../services/ai.service");
+
 
 const getProducts = (req, res) => {
   res.json({
@@ -91,7 +93,7 @@ const getProductReviews = (req, res) => {
   });
 };
 
-const analyzeProduct = (req, res) => {
+const analyzeProduct = async (req, res) => {
   const id = parseInt(req.params.id);
 
   const product = products.find((product) => product.id === id);
@@ -103,9 +105,20 @@ const analyzeProduct = (req, res) => {
     });
   }
 
-  // Temporary mock sentiment score
-  // Later this will come from the AI service
-  const sentimentScore = 80;
+  const reviewTexts = (product.reviews || [])
+    .map((review) => review.text || review.comment)
+    .filter(Boolean);
+
+  // sentimentScore is on the same 0-100 scale as priceScore/ratingScore,
+  // so it can be blended directly in calculateAIScore.
+  let sentimentScore = 50; // neutral default when there are no reviews
+
+  if (reviewTexts.length > 0) {
+    const results = await analyzeSentimentBatch(reviewTexts);
+    const avgModelScore =
+      results.reduce((sum, r) => sum + r.score, 0) / results.length; // -1..1
+    sentimentScore = Number((((avgModelScore + 1) / 2) * 100).toFixed(2)); // 0..100
+  }
 
   const priceScore = calculatePriceScore(product);
   const ratingScore = calculateRatingScore(product);
