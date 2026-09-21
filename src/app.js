@@ -1,8 +1,6 @@
-const productRoutes = require("./routes/product.routes");
-const express = require("express");
-const cors = require("cors");
 require("dotenv").config();
-
+const productRoutes = require("./routes/product.routes"); 
+const express = require("express"); const cors = require("cors");
 const app = express();
 
 // Middlewares
