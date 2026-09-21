@@ -115,9 +115,13 @@ const analyzeProduct = async (req, res) => {
 
   if (reviewTexts.length > 0) {
     const results = await analyzeSentimentBatch(reviewTexts);
-    const avgModelScore =
-      results.reduce((sum, r) => sum + r.score, 0) / results.length; // -1..1
-    sentimentScore = Number((((avgModelScore + 1) / 2) * 100).toFixed(2)); // 0..100
+    const validResults = results.filter((r) => r.success);
+    if (validResults.length > 0) {
+      const avgModelScore = validResults.reduce((sum, r) => sum + r.score, 0) / validResults.length;
+      sentimentScore = Number((((avgModelScore + 1) / 2) * 100).toFixed(2));
+    }dResults.length;
+      sentimentScore = Number((((avgModelScore + 1) / 2) * 100).toFixed(2));
+    }
   }
 
   const priceScore = calculatePriceScore(product);

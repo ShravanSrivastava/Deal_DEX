@@ -75,7 +75,7 @@ function normalizeParsedResult(parsed, rawResponse) {
       ? parsed.summary.trim()
       : 'No summary available.';
 
-  return { sentiment, score, confidence, summary, raw: rawResponse };
+ return { sentiment, score, confidence, summary, raw: rawResponse, success: true };
 }
 
 function clamp(value, min, max) {
@@ -89,6 +89,7 @@ function fallbackResult(reason) {
     confidence: 0,
     summary: `Sentiment unavailable: ${reason}`,
     raw: null,
+    success: false,
   };
 }
 
@@ -103,7 +104,7 @@ async function analyzeSentiment(text) {
   }
 
   if (!AI_API_KEY) {
-    console.error('[ai.service] GEMINI_API_KEY is missing/empty. process.env.GEMINI_API_KEY =', JSON.stringify(process.env.GEMINI_API_KEY))
+    console.error('[ai.service] GEMINI_API_KEY is missing/empty. process.env.GEMINI_API_KEY =', console.error('[ai.service] GEMINI_API_KEY is missing/empty.');))
     return fallbackResult('GEMINI_API_KEY not configured');
   }
 
