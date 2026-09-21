@@ -104,7 +104,7 @@ async function analyzeSentiment(text) {
   }
 
   if (!AI_API_KEY) {
-    console.error('[ai.service] GEMINI_API_KEY is missing/empty. process.env.GEMINI_API_KEY =', console.error('[ai.service] GEMINI_API_KEY is missing/empty.');))
+    console.error('[ai.service] GEMINI_API_KEY is missing/empty');
     return fallbackResult('GEMINI_API_KEY not configured');
   }
 
